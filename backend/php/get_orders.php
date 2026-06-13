@@ -1,7 +1,5 @@
 <?php
-/* SECURITY FIX (CRITICAL — Missing Authentication):
- * The full order list (with totals) was readable by anyone. It is
- * now restricted to logged-in admins only. */
+
 require_once 'auth_check.php';
 require_admin_json();
 

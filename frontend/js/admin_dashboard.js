@@ -1,8 +1,5 @@
-// SECURITY/PORTABILITY FIX (LOW): replaced hardcoded http://localhost/project/...
-// URLs with relative paths so the dashboard works on any machine and any folder name.
 
-// BUG FIX: added null check - form element didn't exist when this ran, causing crash
-// BUG FIX: fetch now points to add_product.php (was incorrectly pointing to admin.php)
+
 const addProductForm = document.getElementById("add-product-form");
 if (addProductForm) {
     addProductForm.addEventListener("submit", async function(event) {

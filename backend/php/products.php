@@ -1,20 +1,9 @@
 <?php
-/* ============================================================
- *  products.php  —  Admin page: list + add products
- * ------------------------------------------------------------
- *  SECURITY FIXES:
- *   - CRITICAL (Missing Auth): the add-product POST handler had NO
- *     login check. Now requires an admin session.
- *   - HIGH (Unsafe Upload): file type is now verified by real MIME
- *     type + extension allowlist, not trusted from the filename.
- *   - Removed display_errors (was leaking PHP internals).
- *   - CSRF token added to the form.
- * ============================================================ */
 
 require_once 'auth_check.php';
-require_admin();                 // HTML page -> redirect to login if not admin
+require_admin();
 require_once 'csrf.php';
-require 'ids.php';               // ids.php includes db_connect.php
+require 'ids.php';
 
 $upload_error = "";
 
@@ -27,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($name === '' || $price === null || !isset($_FILES['image'])) {
         $upload_error = "Missing required fields.";
     } else {
-        // --- Safe upload validation ---
+
         $allowed = [
             'image/jpeg' => 'jpg',
             'image/png'  => 'png',
@@ -38,11 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tmp  = $_FILES['image']['tmp_name'];
         $size = $_FILES['image']['size'];
 
-        // 1) Size limit (e.g. 5 MB) so nobody fills the disk.
         if ($size > 5 * 1024 * 1024) {
             $upload_error = "Image too large (max 5 MB).";
         } else {
-            // 2) Check the REAL content type (not the filename the user sent).
+
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mime  = finfo_file($finfo, $tmp);
             finfo_close($finfo);
@@ -50,16 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($allowed[$mime])) {
                 $upload_error = "Only JPG, PNG, GIF, or WEBP images are allowed.";
             } else {
-                // 3) Build our OWN safe filename — never reuse the user's.
-                //    This stops "evil.php" or "evil.php.jpg" tricks.
+
                 $ext         = $allowed[$mime];
                 $safe_name   = bin2hex(random_bytes(8)) . '.' . $ext;
-                $target_dir  = __DIR__ . "/uploads/";
+                $target_dir  = dirname(__DIR__) . "/uploads/";
                 if (!is_dir($target_dir)) mkdir($target_dir, 0755, true);
                 $target_file = $target_dir . $safe_name;
 
                 if (move_uploaded_file($tmp, $target_file)) {
-                    $db_image = "uploads/" . $safe_name;
+                    $db_image = $safe_name;
                     $sql  = "INSERT INTO products (name, price, image) VALUES (?, ?, ?)";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("sds", $name, $price, $db_image);
@@ -129,7 +116,7 @@ $result = $conn->query("SELECT * FROM products");
                 <?php if ($result && $result->num_rows > 0): ?>
                     <?php while ($product = $result->fetch_assoc()): ?>
                         <div class="product-item">
-                            <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                            <img src="../uploads/<?php echo htmlspecialchars(basename($product['image'])); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                             <p>Name: <?php echo htmlspecialchars($product['name']); ?></p>
                             <p>Price: $<?php echo number_format($product['price'], 2); ?></p>
                         </div>

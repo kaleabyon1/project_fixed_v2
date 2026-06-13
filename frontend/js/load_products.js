@@ -24,34 +24,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // SECURITY FIX (HIGH — XSS):
-            // The old code built HTML strings and put product names inside
-            // an inline onclick="addToCart('...')". Browser entity-decoding
-            // meant a name like O'Brien could break out and inject code.
-            //
-            // We now build each card with createElement and set text via
-            // textContent (which can NEVER be interpreted as HTML), and we
-            // attach the click handler in JS — no string-embedded data at all.
             productContainer.innerHTML = "";
 
+            const imgUrl = (raw) => {
+                if (!raw) return "../backend/uploads/placeholder.jpg";
+                const file = String(raw).split("/").pop();
+                return "../backend/uploads/" + file;
+            };
+
             products.forEach(product => {
-                let imagePart = product.image || "";
-                if (!imagePart.includes("uploads/")) {
-                    imagePart = "uploads/" + imagePart;
-                }
-                const finalSrc = "../backend/" + imagePart;
+                const finalSrc = imgUrl(product.image);
 
                 const card = document.createElement("div");
                 card.className = "product-card";
 
                 const img = document.createElement("img");
                 img.src = finalSrc;
-                img.alt = product.name;        // .alt is a property, not HTML — safe
+                img.alt = product.name;
                 img.className = "product-image";
                 img.onerror = () => { img.src = "../backend/uploads/placeholder.jpg"; };
 
                 const title = document.createElement("h3");
-                title.textContent = product.name;   // safe: rendered as plain text
+                title.textContent = product.name;
 
                 const price = document.createElement("p");
                 price.className = "price";
@@ -59,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const btn = document.createElement("button");
                 btn.textContent = "Add to Cart";
-                // Data is passed as real JS values via a closure — never as a string.
+
                 btn.addEventListener("click", () => {
                     addToCart(product.id, product.name, parseFloat(product.price), finalSrc);
                 });

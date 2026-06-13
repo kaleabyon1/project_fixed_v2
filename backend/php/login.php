@@ -1,30 +1,48 @@
 <?php
-session_start(); // must be at top, before any output
+session_start();
 require 'ids.php';
 require_once 'csrf.php';
 
 $error = "";
 
+const BF_MAX_FAILS = 5;
+const BF_WINDOW    = 900;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // SECURITY FIX (CSRF): reject forged cross-site submissions.
+
     csrf_verify();
+
+    $conn->query("CREATE TABLE IF NOT EXISTS login_attempts (
+        ip_address VARCHAR(45) NOT NULL PRIMARY KEY,
+        fail_count INT NOT NULL DEFAULT 0,
+        first_fail INT NOT NULL DEFAULT 0,
+        last_fail  INT NOT NULL DEFAULT 0
+    )");
+
+    $now = time();
+
+    $bf = $conn->prepare("SELECT fail_count, first_fail FROM login_attempts WHERE ip_address = ?");
+    $bf->bind_param("s", $client_ip);
+    $bf->execute();
+    $bf_row = $bf->get_result()->fetch_assoc();
+    $bf->close();
+
+    $prior_fails = ($bf_row && ($now - (int)$bf_row['first_fail']) <= BF_WINDOW)
+        ? (int)$bf_row['fail_count'] : 0;
 
     $email    = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $sql  = "SELECT * FROM users WHERE email = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
 
     if ($stmt) {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        // SECURITY FIX (User Enumeration):
-        // The old code said "User not found" vs "Invalid password",
-        // which let attackers discover which emails exist. We now use
-        // ONE generic message for every failure case.
         $generic_error = "Invalid email or password.";
+
+        $bad_credentials = false;
 
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
@@ -32,9 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (password_verify($password, $user['password'])) {
                 if ($user['role'] === 'admin') {
 
-                    // SECURITY FIX (Session Fixation):
-                    // Generate a brand-new session ID at the moment of login
-                    // so any ID an attacker may have planted becomes useless.
+                    $clr = $conn->prepare("DELETE FROM login_attempts WHERE ip_address = ?");
+                    $clr->bind_param("s", $client_ip);
+                    $clr->execute();
+                    $clr->close();
+
                     session_regenerate_id(true);
 
                     $_SESSION['username'] = $user['username'];
@@ -42,16 +62,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     header("Location: admin.php");
                     exit();
                 } else {
-                    // Don't reveal that the password was correct for a non-admin.
+
                     $error = "Access denied: this account does not have admin permissions.";
                 }
             } else {
                 $error = $generic_error;
+                $bad_credentials = true;
             }
         } else {
             $error = $generic_error;
+            $bad_credentials = true;
         }
         $stmt->close();
+
+        if ($bad_credentials) {
+            $new_fails = $prior_fails + 1;
+            $first     = ($prior_fails === 0) ? $now : (int)$bf_row['first_fail'];
+
+            $up = $conn->prepare(
+                "INSERT INTO login_attempts (ip_address, fail_count, first_fail, last_fail)
+                 VALUES (?, ?, ?, ?)
+                 ON DUPLICATE KEY UPDATE fail_count = VALUES(fail_count),
+                                         first_fail = VALUES(first_fail),
+                                         last_fail  = VALUES(last_fail)"
+            );
+            $up->bind_param("siii", $client_ip, $new_fails, $first, $now);
+            $up->execute();
+            $up->close();
+
+            if (is_whitelisted_ip($client_ip)) {
+                $error = $generic_error;
+            } else {
+                if ($new_fails >= BF_MAX_FAILS) {
+
+                    $clr = $conn->prepare("DELETE FROM login_attempts WHERE ip_address = ?");
+                    $clr->bind_param("s", $client_ip);
+                    $clr->execute();
+                    $clr->close();
+
+                    ban_ip($conn, $client_ip,
+                           "Brute force: $new_fails failed admin login attempts",
+                           "Brute Force Login");
+
+                }
+
+                $left  = BF_MAX_FAILS - $new_fails;
+                $error = "Invalid email or password. "
+                       . "($left attempt" . ($left === 1 ? "" : "s") . " left before your IP is blocked.)";
+            }
+        }
     } else {
         $error = "A server error occurred. Please try again later.";
     }
@@ -84,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form action="login.php" method="POST">
-            <?php echo csrf_field(); // SECURITY FIX (CSRF): hidden token ?>
+            <?php echo csrf_field(); ?>
 
             <label for="email">Admin Email:</label>
             <input type="email" id="email" name="email" required placeholder="admin@shop.com"><br>

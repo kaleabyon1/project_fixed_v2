@@ -1,9 +1,9 @@
 <?php
-// SECURITY: use the shared admin guard (single source of truth).
+
 require_once 'auth_check.php';
 require_admin();
 
-require 'ids.php'; // ids.php includes db_connect.php via require_once
+require 'ids.php';
 
 $user_count    = $conn->query("SELECT COUNT(*) as count FROM users")->fetch_assoc()['count'];
 $product_count = $conn->query("SELECT COUNT(*) as count FROM products")->fetch_assoc()['count'];
@@ -90,8 +90,7 @@ $visitor_result = $conn->query("SELECT * FROM visitors ORDER BY visited_at DESC 
 
         <section>
             <h2>Add Product</h2>
-            <!-- BUG FIX: added id="add-product-form" so admin_dashboard.js can find it -->
-            <!-- BUG FIX: changed action to add_product.php (the correct handler) -->
+
             <form id="add-product-form" action="add_product.php" method="POST" enctype="multipart/form-data"
                   style="background:white; padding:20px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,.1);">
                 <label for="name">Product Name:</label>

@@ -1,19 +1,9 @@
 <?php
-/* ============================================================
- *  add_product.php  —  API endpoint that adds a product (JSON)
- * ------------------------------------------------------------
- *  SECURITY FIXES:
- *   - Auth check now runs FIRST (session started before use).
- *   - HIGH (Unsafe Upload): getimagesize() alone is bypassable with
- *     a "polyglot" file. We now verify the real MIME type, enforce
- *     an extension allowlist, a size cap, and generate our own
- *     random filename so an uploaded ".php" can never execute.
- * ============================================================ */
 
 require_once 'auth_check.php';
-require_admin_json();            // returns JSON 403 if not an admin
+require_admin_json();
 
-require 'ids.php';               // ids.php includes db_connect.php
+require 'ids.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header("Content-Type: application/json");
@@ -41,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    // Verify the actual file content type.
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mime  = finfo_file($finfo, $tmp);
     finfo_close($finfo);
@@ -51,15 +40,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    // Our own safe, random filename — never trust the uploaded name.
     $ext         = $allowed[$mime];
     $safe_name   = bin2hex(random_bytes(8)) . '.' . $ext;
-    $target_dir  = __DIR__ . "/uploads/";
+    $target_dir  = dirname(__DIR__) . "/uploads/";
     if (!is_dir($target_dir)) mkdir($target_dir, 0755, true);
     $target_file = $target_dir . $safe_name;
 
     if (move_uploaded_file($tmp, $target_file)) {
-        $db_image_path = "uploads/" . $safe_name;
+        $db_image_path = $safe_name;
         $sql  = "INSERT INTO products (name, price, image) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sds", $name, $price, $db_image_path);

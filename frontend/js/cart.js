@@ -9,13 +9,13 @@ function loadCart() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     if (cart.length === 0) {
-        container.innerHTML = "<p>Your cart is empty. <a href='index.php'>Go Shopping</a></p>";
+        container.innerHTML = "<p>Your cart is empty. <a href='index.html'>Go Shopping</a></p>";
         if(totalElement) totalElement.innerText = "0.00";
         return;
     }
 
     container.innerHTML = cart.map((item, index) => {
-        let imgSrc = item.image || '../backend/php/uploads/placeholder.jpg';
+        let imgSrc = item.image || '../backend/uploads/placeholder.jpg';
         let itemTotal = item.price * item.quantity;
         return `
         <div class="cart-item">
@@ -46,7 +46,7 @@ function changeQty(index, change) {
     if (cart[index].quantity <= 0) {
         cart.splice(index, 1);
     }
-    
+
     localStorage.setItem("cart", JSON.stringify(cart));
     loadCart(); 
 }

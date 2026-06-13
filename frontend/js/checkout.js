@@ -10,11 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // SECURITY FIX (HIGH — XSS):
-    // The old code injected item.name and item.image into the page with
-    // innerHTML template literals. If a product name ever contained HTML,
-    // that became stored XSS. We now build each row with createElement and
-    // set all text via textContent, which is never parsed as HTML.
     container.innerHTML = "";
 
     const list = document.createElement("div");
@@ -37,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         info.style.flexGrow = "1";
         const nameEl = document.createElement("strong");
         nameEl.style.fontSize = "1.1em";
-        nameEl.textContent = item.name;               // safe
+        nameEl.textContent = item.name;
         const sub = document.createElement("small");
         sub.style.color = "#666";
         sub.textContent = `$${parseFloat(item.price).toFixed(2)} x ${item.quantity}`;

@@ -1,3 +1,32 @@
-FOR THE PROJECT TO WORK IT NEEDS XAMPP.
-THE ADMIN PAGE IS ACCESED THROUGH http://localhost/project/backend/php/admin.php
-MY NAME IS KALEAB YONAS TILAHUN
+HOW TO RUN THIS PROJECT (IMPORTANT)
+===================================
+
+This project uses PHP, so it MUST be opened through the Apache web server,
+NOT by double-clicking the HTML files.
+
+If you double-click a file (or the address bar starts with "file:///"), then:
+  - the products will NOT load, and
+  - clicking "Admin Panel" will show raw PHP code instead of a login form.
+That is the #1 cause of "it doesn't work".
+
+CORRECT WAY TO OPEN IT:
+  1. Start XAMPP and turn on Apache and MySQL.
+  2. This folder sits at:
+         C:\xampp\htdocs\project_fixed_v2\
+  3. In your browser, go to (NOTE: "localhost", not "C:/..."):
+         http://localhost/project_fixed_v2/frontend/index.html
+
+     Shortcut: http://localhost/project_fixed_v2/  also works
+     (it auto-redirects to the store).
+
+  CHECK: the address bar must start with  http://localhost/
+  If it starts with  file:///  or shows a "File" badge, you double-clicked
+  the file — close it and use the http://localhost link above instead.
+
+ADMIN LOGIN:
+  - Click "Admin Panel" on the homepage. It opens the password page
+    (login.php). Enter the admin email + password to reach the dashboard.
+  - The admin dashboard itself (admin.php) is protected: if you are not
+    logged in, it automatically sends you back to the password page.
+
+PROJECT BY: Kaleab Yonas Tilahun

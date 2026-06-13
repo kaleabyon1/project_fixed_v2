@@ -1,4 +1,4 @@
-/* main css */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -44,10 +44,10 @@ h1 {
     margin: 0;
 }
 
-/* --- FIXED PRODUCT GRID (Matches your JS) --- */
+
 #product-list {
     display: grid;
-    /* This creates columns that automatically fit the screen */
+
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     width: 100%;
@@ -55,7 +55,7 @@ h1 {
     margin: 0 auto;
 }
 
-/* --- FIXED PRODUCT CARD --- */
+
 .product-card {
     background-color: #ffffff;
     border: 1px solid #ddd;
@@ -64,7 +64,7 @@ h1 {
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
-    overflow: hidden; /* Keeps everything inside the box */
+    overflow: hidden; 
 }
 
 .product-card:hover {
@@ -72,11 +72,11 @@ h1 {
     box-shadow: 0 5px 15px rgba(0,0,0,0.15);
 }
 
-/* --- FIXED IMAGE SIZING (Crucial) --- */
+
 .product-card img {
-    width: 100%;       /* Force image to fit the card width */
-    height: 200px;     /* Force a standard height */
-    object-fit: cover; /* Crops the image smartly so it isn't squished */
+    width: 100%;       
+    height: 200px;     
+    object-fit: cover; 
     border-radius: 4px;
     margin-bottom: 15px;
     cursor: pointer;
@@ -109,7 +109,7 @@ h1 {
     background-color: #0056b3;
 }
 
-/* --- ORDERS SECTION --- */
+
 #orders-container {
     display: flex;
     flex-direction: column;

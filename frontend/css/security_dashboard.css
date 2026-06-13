@@ -1,13 +1,13 @@
-/* frontend/css/security_dashboard.css */
 
-/* Main Container */
+
+
 .dashboard-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Alerts */
+
 .alert {
     padding: 15px;
     margin-bottom: 20px;
@@ -21,7 +21,7 @@
     border: 1px solid #c3e6cb;
 }
 
-/* Tables */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -45,7 +45,7 @@ tr:hover {
     background-color: #f1f1f1;
 }
 
-/* Badges for Attack Types */
+
 .badge {
     padding: 5px 10px;
     border-radius: 4px;
@@ -54,16 +54,16 @@ tr:hover {
 }
 
 .badge-sql {
-    background-color: #dc3545; /* Red */
+    background-color: #dc3545; 
     color: white;
 }
 
 .badge-xss {
-    background-color: #ffc107; /* Yellow */
+    background-color: #ffc107; 
     color: black;
 }
 
-/* Buttons */
+
 .btn-unblock {
     background-color: #28a745;
     color: white;
@@ -78,7 +78,7 @@ tr:hover {
     background-color: #218838;
 }
 
-/* Code Snippets */
+
 code {
     background-color: #f8f9fa;
     padding: 2px 5px;

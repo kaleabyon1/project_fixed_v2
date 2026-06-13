@@ -1,14 +1,7 @@
 <?php
-/* ============================================================
- *  checkout.php  —  Alternate order endpoint
- * ------------------------------------------------------------
- *  SECURITY FIX (Low): now includes ids.php so it is covered by
- *  rate limiting and attack scanning like the other endpoints.
- *  Already used prepared statements (good); kept that.
- * ============================================================ */
 
 session_start();
-require 'ids.php';            // ids.php includes db_connect.php
+require 'ids.php';
 header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
@@ -17,7 +10,6 @@ if (!isset($data['cart']) || empty($data['cart'])) {
     exit;
 }
 
-// Total is calculated on the server, never trusted from the client.
 $total_price = 0;
 foreach ($data['cart'] as $item) {
     $total_price += ((float)($item['price'] ?? 0)) * ((int)($item['quantity'] ?? 0));

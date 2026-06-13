@@ -1,6 +1,5 @@
 <?php
-/* SECURITY FIX (already had a check — now uses the shared helper):
- * The user list is admin-only. */
+
 require_once 'auth_check.php';
 require_admin();
 

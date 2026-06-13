@@ -1,5 +1,5 @@
 <?php
-// SECURITY: shared admin guard.
+
 require_once 'auth_check.php';
 require_admin();
 require_once 'csrf.php';
@@ -7,7 +7,7 @@ require_once 'csrf.php';
 include 'db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['unblock_ip'])) {
-    // SECURITY FIX (CSRF): verify token before unblocking an IP.
+
     csrf_verify();
     $ip_to_unblock = $_POST['unblock_ip'];
     $stmt = $conn->prepare("DELETE FROM blocked_ips WHERE ip_address = ?");
@@ -86,7 +86,7 @@ $blocks_result = $conn->query($blocks_query);
             <p>No active IP bans. Everyone is behaving!</p>
         <?php endif; ?>
 
-        <h2>📜 Recent Security Incidents</h2>
+        <h2> Recent Security Incidents</h2>
         <?php if ($logs_result->num_rows > 0): ?>
             <table>
                 <thead>
@@ -100,7 +100,7 @@ $blocks_result = $conn->query($blocks_query);
                 </thead>
                 <tbody>
                     <?php while ($log = $logs_result->fetch_assoc()): ?>
-                        <?php 
+                        <?php
                             $badgeClass = (stripos($log['attack_type'], 'SQL') !== false) ? 'badge-sql' : 'badge-xss';
                         ?>
                         <tr>
