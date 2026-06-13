@@ -1,0 +1,92 @@
+/* frontend/css/security_dashboard.css */
+
+/* Main Container */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Alerts */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #333;
+    color: white;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Badges for Attack Types */
+.badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.85em;
+}
+
+.badge-sql {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+.badge-xss {
+    background-color: #ffc107; /* Yellow */
+    color: black;
+}
+
+/* Buttons */
+.btn-unblock {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn-unblock:hover {
+    background-color: #218838;
+}
+
+/* Code Snippets */
+code {
+    background-color: #f8f9fa;
+    padding: 2px 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    color: #d63384;
+    font-family: monospace;
+    display: block;
+    max-width: 400px;
+    overflow-x: auto;
+}

@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="en">
+...
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="css/cart.css">
+    <script src="js/cart.js" defer></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="cart.html">Cart</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Shopping Cart</h1>
+        
+        <div id="cart-items-container" class="cart-list"></div>
+
+        <div class="cart-summary">
+            <h3>Total: $<span id="cart-total-price">0.00</span></h3>
+            <button onclick="window.location.href='checkout.html'" style="background:green; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">Proceed to Checkout</button>
+        </div>
+    </main>
+</body>
+</html>

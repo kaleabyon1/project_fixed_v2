@@ -1,0 +1,157 @@
+/* main css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin: 0;
+}
+
+/* --- FIXED PRODUCT GRID (Matches your JS) --- */
+#product-list {
+    display: grid;
+    /* This creates columns that automatically fit the screen */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- FIXED PRODUCT CARD --- */
+.product-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    overflow: hidden; /* Keeps everything inside the box */
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* --- FIXED IMAGE SIZING (Crucial) --- */
+.product-card img {
+    width: 100%;       /* Force image to fit the card width */
+    height: 200px;     /* Force a standard height */
+    object-fit: cover; /* Crops the image smartly so it isn't squished */
+    border-radius: 4px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.product-card h3 {
+    margin: 10px 0 5px;
+    font-size: 1.2em;
+}
+
+.product-card .price {
+    font-size: 1.1em;
+    color: #28a745;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.product-card button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    width: 100%;
+}
+
+.product-card button:hover {
+    background-color: #0056b3;
+}
+
+/* --- ORDERS SECTION --- */
+#orders-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+    margin: auto;
+}
+
+.order {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #007bff;
+    transition: transform 0.2s ease-in-out;
+}
+
+.order:hover {
+    transform: scale(1.01);
+}
+
+.order p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.order strong {
+    font-size: 18px;
+    color: #333;
+}
+
+.order-status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.status-pending {
+    color: #856404;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+}
